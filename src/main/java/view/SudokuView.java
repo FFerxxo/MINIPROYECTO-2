@@ -21,6 +21,7 @@ import model.SudokuBoard;
  * @version 1.0
  */
 
+
 public class SudokuView {
 
     /** Panel principal que contiene todos los elementos de la vista */
