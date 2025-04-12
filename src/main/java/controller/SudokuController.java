@@ -51,6 +51,25 @@ public class SudokuController {
         setupEventHandlers();
     }
 
+    private int countRemainingNumber3() {
+        int placed = 0;
+        // Contador de cuántos números 3 ya están colocados
+        for (int row = 0; row < SudokuBoard.BOARD_SIZE; row++) {
+            for (int col = 0; col < SudokuBoard.BOARD_SIZE; col++) {
+                if (model.getCellValue(row, col) == 3) {
+                    placed++;
+                }
+            }
+        }
+
+        return SudokuBoard.BOARD_SIZE - placed;
+    }
+
+    private void updateNumber3CountInView() {
+        int remaining = countRemainingNumber3();
+        view.updateNumber3Count(remaining);
+    }
+
 
     /**
      * Configuro los manejadores de eventos para la interfaz.
@@ -80,6 +99,7 @@ public class SudokuController {
         if (confirmed) {
             model.initializeGame();
             view.updateBoard(model);
+            updateNumber3CountInView();
             hintsUsed = 0;
             view.updateStatus("Nuevo juego iniciado. ¡Buena suerte!");
         }
@@ -126,6 +146,10 @@ public class SudokuController {
         int hint = model.getHint(row, col);
         if (hint > 0) {
             view.highlightHint(row, col, hint);
+            if (hint == 3) {
+               updateNumber3CountInView();
+            }
+
             hintsUsed++;
             view.updateStatus("Ayuda utilizada (" + hintsUsed + "/" + MAX_HINTS + ")");
         } else {
@@ -160,6 +184,12 @@ public class SudokuController {
                     boolean success = model.placeNumber(row, col, num);
                     view.updateCell(row, col, num, success);
 
+                    if (success && num == 3) {
+                        updateNumber3CountInView();
+                    } else if (success && selectedCell.getValue() == 3) {
+                        // Si el usuario reemplazó un 3 con otro número
+                        updateNumber3CountInView();
+                    }
 
                     if (!success) {
                         view.showError("Número Inválido",
