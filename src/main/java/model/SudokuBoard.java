@@ -36,7 +36,7 @@ public class SudokuBoard {
         // Todas las celdas son editables inicialmente
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
-                board[row][col] = 0; // 0 representa una celda vacía
+                board[row][col] = 1; // 0 representa una celda vacía
                 editable[row][col] = true;
             }
         }
@@ -59,6 +59,24 @@ public class SudokuBoard {
             }
         }
     }
+    /**
+     * Coloca exactamente 6 números 1 en el tablero, uno por fila/columna/bloque
+     * .
+     */
+    public void placeSixValidOnes() {
+        int unosColocados = 0;
+
+        for (int row = 0; row < BOARD_SIZE && unosColocados < 6; row++) {
+            for (int col = 0; col < BOARD_SIZE && unosColocados < 6; col++) {
+                if (board[row][col] == 0 && isValidPlacement(row, col, 1)) {
+                    board[row][col] = 1;
+                    editable[row][col] = false;
+                    unosColocados++;
+                }
+            }
+        }
+    }
+
 
     /**
      * Coloca 2 números aleatorios en un bloque específico.

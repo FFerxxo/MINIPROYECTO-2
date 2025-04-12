@@ -49,6 +49,9 @@ public class SudokuController {
 
         // Aqui Configuro los eventos
         setupEventHandlers();
+
+        // Se muestran los 1
+        view.updateBoard(model);
     }
 
     private int countRemainingNumber3() {
@@ -98,6 +101,7 @@ public class SudokuController {
 
         if (confirmed) {
             model.initializeGame();
+            model.placeSixValidOnes();
             view.updateBoard(model);
             updateNumber3CountInView();
             hintsUsed = 0;
