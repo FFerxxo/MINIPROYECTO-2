@@ -51,7 +51,24 @@ public class SudokuController {
         setupEventHandlers();
     }
 
+    private int countRemainingNumber3() {
+        int placed = 0;
+        // Contador de cuántos números 3 ya están colocados
+        for (int row = 0; row < SudokuBoard.BOARD_SIZE; row++) {
+            for (int col = 0; col < SudokuBoard.BOARD_SIZE; col++) {
+                if (model.getCellValue(row, col) == 3) {
+                    placed++;
+                }
+            }
+        }
 
+        return SudokuBoard.BOARD_SIZE - placed;
+    }
+
+    private void updatefollowerThreeNumber() {
+        int remaining = countRemainingNumber3();
+        view.updatefollowerThreeNumber(remaining);
+    }
     /**
      * Configuro los manejadores de eventos para la interfaz.
      */
@@ -80,6 +97,7 @@ public class SudokuController {
         if (confirmed) {
             model.initializeGame();
             view.updateBoard(model);
+            updatefollowerThreeNumber();
             hintsUsed = 0;
             view.updateStatus("Nuevo juego iniciado. ¡Buena suerte!");
         }
@@ -126,6 +144,8 @@ public class SudokuController {
         int hint = model.getHint(row, col);
         if (hint > 0) {
             view.highlightHint(row, col, hint);
+            if (hint==3)
+                updatefollowerThreeNumber();
             hintsUsed++;
             view.updateStatus("Ayuda utilizada (" + hintsUsed + "/" + MAX_HINTS + ")");
         } else {
@@ -159,19 +179,24 @@ public class SudokuController {
                 if (num >= 1 && num <= SudokuBoard.BOARD_SIZE) {
                     boolean success = model.placeNumber(row, col, num);
                     view.updateCell(row, col, num, success);
-
-
-                    if (!success) {
+                    if (success) {
+                        if (num == 3) {
+                            updatefollowerThreeNumber();
+                        } else if (selectedCell.getValue() == 3) {
+                            // Si el usuario reemplazó un 3 con otro número
+                            updatefollowerThreeNumber();
+                        }
+                        checkGameCompletion();
+                    } else {
                         view.showError("Número Inválido",
                                 "El número " + num + " no puede colocarse aquí según las reglas del Sudoku.");
-                    } else {
-                        checkGameCompletion();
                     }
                 }
             } catch (NumberFormatException e) {
                 // No es un número válido
             }
             event.consume();
+
         }
         // Tecla de borrado
         else if (event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE) {
@@ -180,6 +205,8 @@ public class SudokuController {
             event.consume();
         }
     }
+
+
 
 
     /**

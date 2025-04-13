@@ -46,6 +46,7 @@ public class SudokuBoard {
      * este metodo inicializa un nuevo juego con algunos números iniciales en el tablero.
      * Coloca 2 números por cada bloque de 2x3 asegurándose que sean válidos.
      */
+    /**
     public void initializeGame() {
         // Limpiar el tablero
         clearBoard();
@@ -58,7 +59,34 @@ public class SudokuBoard {
                 placeNumbersInBlock(blockRow, blockCol, random);
             }
         }
+    } */
+    public void initializeGame() {
+        clearBoard();
+        placeAllOnes();
+
+        // Mostrar todos los números 1 de la solución como pistas fijas
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                if (board[row][col] == 1) {
+                    board[row][col] = 1; // Lo coloca visible en el tablero
+                    editable[row][col] = false; // Lo marca como NO editable
+                }
+            }
+        }
+
+        // Luego puedes agregar otras pistas si quieres (por dificultad)
     }
+    private void placeAllOnes() {
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                if (board[row][col] == 0 && isValidPlacement(row, col, 1)) {
+                    board[row][col] = 1;
+                    editable[row][col] = false; // marcar como no editable
+                }
+            }
+        }
+    }
+
 
     /**
      * Coloca 2 números aleatorios en un bloque específico.
