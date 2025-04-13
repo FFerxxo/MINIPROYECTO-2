@@ -22,7 +22,7 @@ import model.SudokuBoard;
  */
 
 public class SudokuView {
-
+    private Label followerThreeNumber;
     /** Panel principal que contiene todos los elementos de la vista */
     private BorderPane root;
 
@@ -70,7 +70,8 @@ public class SudokuView {
 
         // Etiqueta de estado
         statusLabel = new Label("¡Bienvenido! Presiona 'Nuevo Juego' para comenzar.");
-
+        followerThreeNumber = new Label("el #3 falta: 6 veces");
+        followerThreeNumber.setStyle("-fx-font-size: 14px;");
         // Organizar los elementos en la vista
         VBox topBox = new VBox(10, titleLabel);
         topBox.setAlignment(Pos.CENTER);
@@ -79,6 +80,7 @@ public class SudokuView {
         controlBox.setAlignment(Pos.CENTER);
 
         VBox bottomBox = new VBox(10, controlBox, statusLabel);
+        bottomBox.getChildren().add(followerThreeNumber);
         bottomBox.setAlignment(Pos.CENTER);
 
         root.setTop(topBox);
@@ -271,4 +273,9 @@ public class SudokuView {
     public BorderPane getRoot() {
         return root;
     }
+    public void updatefollowerThreeNumber(int count) {
+        followerThreeNumber.setText("numeros 3 que falta: " + count);
+    }
 }
+
+
